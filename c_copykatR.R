@@ -36,7 +36,7 @@ r_run_copykat <- function(path_file,
             sam.name=sam.name,
             distance="euclidean",
             norm.cell.names=norm.cell.names,
-            output.seg="TRUE",
+            output.seg="FALSE",
             plot.genes="TRUE",
             genome="hg20",
             n.cores=n.cores)
