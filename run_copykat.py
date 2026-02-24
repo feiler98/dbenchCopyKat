@@ -83,7 +83,7 @@ def run_copykat(path_target: Path,
         path_pre_gbc = [p for p in Path.cwd().glob("*__copykat_CNA_raw_results_gene_by_cell.txt")][0]
         df_gbc_pre = pd.read_csv(path_pre_gbc, sep="\t")
         df_gbc_export = df_gbc_pre.drop(["abspos", "band", "ensembl_gene_id", "hgnc_symbol"], axis=1).rename(
-            {"chromosome_name": "CHR", "start_position": "START", "end_position": "END"}, axis=1).set_index("CHR")
+                 {"chromosome_name": "CHR", "start_position": "START", "end_position": "END"}, axis=1).set_index("CHR")
         df_gbc_export.to_csv(Path.cwd() / f"{name_tag}_copykat__GBC.csv")
 
         # export everything to /app/out
