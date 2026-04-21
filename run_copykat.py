@@ -96,9 +96,9 @@ if __name__ == "__main__":
 
     # matrix of possible copykat hyperparameter kwargs
     kwargs_gridsearch = {
-        "n_cores": [10],
-        "n_genes_chr": [5],
-        "window_size": [10, 25, 50, 100],
+        "n_cores": [5, 10, 20],
+        "n_genes_chr": [1, 10, 100],
+        "window_size": [10, 25, 50, 100, 200, 500],
         "low_dr": [0, 0.05, 0.1, 0.2],
         "up_dr": [0, 0.1, 0.2],
         "ks_cut": [0, 0.1, 0.2]
