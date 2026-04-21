@@ -120,7 +120,8 @@ if __name__ == "__main__":
     }
 
     path_in, path_out = val_build_project()
-    run_copykat(path_in, path_out, n_cores=10, cell_pre_label=True)  # standard parameters; one core
+    run_copykat(path_in, path_out, n_cores=1, cell_pre_label=False)  # standard parameters; one core
+    run_copykat(path_in, path_out, n_cores=1, cell_pre_label=True)
     list_kwargs = grid_by_dict(kwargs_gridsearch)
     for kwarg_opt in list_kwargs:
         print(f"CopyKat running with hyperparameters: {kwarg_opt}")
