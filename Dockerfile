@@ -1,5 +1,6 @@
 FROM feiler98/copykat_pyomics
 
+RUN mkdir -p /scratch/tmp/feiler/dbenchCopyKat
 WORKDIR /scratch/tmp/feiler/dbenchCopyKat
 COPY . .
 
