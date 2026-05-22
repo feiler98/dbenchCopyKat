@@ -1,3 +1,4 @@
 .idea
 data_input
-run_copykat_local.py
+run_local.py
+app

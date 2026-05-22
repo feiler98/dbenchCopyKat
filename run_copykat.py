@@ -9,7 +9,22 @@ from pathlib import Path
 import shutil
 from pyomics.utils import benchmark_method
 import itertools
+import random
+import string
 # ----------------------------------------------------------------------------------------------------------------------
+
+def random_sequence(len_seq: int) -> str:
+    list_signs = []
+    list_signs.extend(list(string.ascii_lowercase))
+    list_signs.extend(list(string.ascii_uppercase))
+    list_signs.extend(list(range(0, 10, 1)))
+    random.shuffle(list_signs)
+    i = 1
+    rand_seq = []
+    while i <= len_seq:
+        rand_seq.append(str(list_signs[random.randint(0, len(list_signs)-1)]))
+        i+=1
+    return "".join(rand_seq)
 
 def grid_by_dict(pars_dict: dict) -> list:
     keys=pars_dict.keys()
@@ -55,8 +70,8 @@ def run_copykat(path_target: Path,
         dict_paths_target_txts = get_hg_38_desc_paths(path_target)
         list_paths_target_csvs = [p for p in list_paths_target_csvs if p.stem.split("__RCM")[0] in dict_paths_target_txts.keys()]
     for p in list_paths_target_csvs:
-        name_tag = f"{p.stem}__n,{n_cores};n,{n_genes_chr};w,{window_size};l,{low_dr};u,{up_dr};k,{ks_cut};c,{cell_pre_label}__copykat_"
-        path_out_target = path_out_data / f"out__{name_tag}"
+        name_tag = f"{p.stem}__{random_sequence(len_seq=8)}__copykat"
+        path_out_target = path_out_data / name_tag
         path_out_target.mkdir(parents=True, exist_ok=True)
 
         norm_cell_vector = ""
@@ -80,7 +95,7 @@ def run_copykat(path_target: Path,
                         norm_cell_vector):
             r = robjects.r
             r.source("c_copykatR.R")
-            r.r_run_copykat(str(p), name_tag, n_cores, n_genes_chr, window_size, ks_cut, low_dr, up_dr, norm_cell_vector)
+            r.r_run_copykat(str(p), name_tag.replace("_copykat", ""), n_cores, n_genes_chr, window_size, ks_cut, low_dr, up_dr, norm_cell_vector)
 
         run_rscript(p,
                     name_tag,
@@ -94,7 +109,7 @@ def run_copykat(path_target: Path,
         ################################################################################################################
 
         # reformat *__copykat_CNA_raw_results_gene_by_cell.txt to final GBC-format
-        path_pre_gbc = [p for p in Path.cwd().glob("*__copykat_CNA_raw_results_gene_by_cell.txt")][0]
+        path_pre_gbc = [p for p in Path.cwd().glob("*_copykat_CNA_raw_results_gene_by_cell.txt")][0]
         df_gbc_pre = pd.read_csv(path_pre_gbc, sep="\t")
         df_gbc_export = df_gbc_pre.drop(["abspos", "band", "ensembl_gene_id", "hgnc_symbol"], axis=1).rename(
                  {"chromosome_name": "CHR", "start_position": "START", "end_position": "END"}, axis=1).set_index("CHR")
@@ -110,7 +125,7 @@ if __name__ == "__main__":
 
     # matrix of possible copykat hyperparameter kwargs
     kwargs_gridsearch = {
-        "n_cores": [5, 10, 20],
+        "n_cores": [30],
         "n_genes_chr": [1, 5, 10, 100],
         "window_size": [10, 25, 50, 100, 200, 500],
         "low_dr": [0, 0.05, 0.1, 0.2],
