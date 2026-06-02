@@ -94,7 +94,7 @@ def run_copykat(path_target: Path,
                         up_dr,
                         norm_cell_vector):
             r = robjects.r
-            r.source("c_copykatR.R")
+            r.source(Path(__file__).parent / "c_copykatR.R")
             r.r_run_copykat(str(p), name_tag.replace("_copykat", ""), n_cores, n_genes_chr, window_size, ks_cut, low_dr, up_dr, norm_cell_vector)
 
         run_rscript(p,
