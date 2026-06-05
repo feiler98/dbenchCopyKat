@@ -70,7 +70,7 @@ def run_copykat(path_target: Path,
         dict_paths_target_txts = get_hg_38_desc_paths(path_target)
         list_paths_target_csvs = [p for p in list_paths_target_csvs if p.stem.split("__RCM")[0] in dict_paths_target_txts.keys()]
     for p in list_paths_target_csvs:
-        name_tag = f"{p.stem}__{random_sequence(len_seq=8)}__copykat"
+        name_tag = f"{p.stem.replace("__RCM", "")}__{random_sequence(len_seq=8)}__copykat"
         path_out_target = path_out_data / name_tag
         path_out_target.mkdir(parents=True, exist_ok=True)
 
