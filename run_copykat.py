@@ -127,10 +127,10 @@ if __name__ == "__main__":
     kwargs_gridsearch = {
         "n_cores": [30],
         "n_genes_chr": [1, 5, 10, 100],
-        "window_size": [10, 25, 50, 100, 200, 500],
+        "window_size": [10, 25, 50, 100],
         "low_dr": [0, 0.05, 0.1, 0.25],
         "up_dr": [0, 0.1, 0.25],
-        "ks_cut": [0.1, 0.2, 0.3],
+        "ks_cut": [0.05, 0.1, 0.3],
         "cell_pre_label": [True, False]
     }
 
