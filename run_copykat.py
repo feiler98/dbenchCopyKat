@@ -96,25 +96,27 @@ def run_copykat(path_target: Path,
             r = robjects.r
             r.source(str(Path(__file__).parent / "c_copykatR.R"))
             r.r_run_copykat(str(p), name_tag.replace("_copykat", ""), n_cores, n_genes_chr, window_size, ks_cut, low_dr, up_dr, norm_cell_vector)
+        try:
+            run_rscript(p,
+                        name_tag,
+                        n_cores,
+                        n_genes_chr,
+                        window_size,
+                        ks_cut,
+                        low_dr,
+                        up_dr,
+                        norm_cell_vector)
+            ################################################################################################################
 
-        run_rscript(p,
-                    name_tag,
-                    n_cores,
-                    n_genes_chr,
-                    window_size,
-                    ks_cut,
-                    low_dr,
-                    up_dr,
-                    norm_cell_vector)
-        ################################################################################################################
-
-        # reformat *__copykat_CNA_raw_results_gene_by_cell.txt to final GBC-format
-        path_pre_gbc = [p for p in Path.cwd().glob("*_copykat_CNA_raw_results_gene_by_cell.txt")][0]
-        df_gbc_pre = pd.read_csv(path_pre_gbc, sep="\t")
-        df_gbc_export = df_gbc_pre.drop(["abspos", "band", "ensembl_gene_id", "hgnc_symbol"], axis=1).rename(
-                 {"chromosome_name": "CHR", "start_position": "START", "end_position": "END"}, axis=1).set_index("CHR")
-        df_gbc_export["CHR"] = df_gbc_export["CHR"].map(lambda x: f"chr{x}")
-        df_gbc_export.to_csv(Path.cwd() / f"{name_tag}_copykat__GBC.csv")
+            # reformat *__copykat_CNA_raw_results_gene_by_cell.txt to final GBC-format
+            path_pre_gbc = [p for p in Path.cwd().glob("*_copykat_CNA_raw_results_gene_by_cell.txt")][0]
+            df_gbc_pre = pd.read_csv(path_pre_gbc, sep="\t")
+            df_gbc_export = df_gbc_pre.drop(["abspos", "band", "ensembl_gene_id", "hgnc_symbol"], axis=1).rename(
+                     {"chromosome_name": "CHR", "start_position": "START", "end_position": "END"}, axis=1).set_index("CHR")
+            df_gbc_export["CHR"] = df_gbc_export["CHR"].map(lambda x: f"chr{x}")
+            df_gbc_export.to_csv(Path.cwd() / f"{name_tag}_copykat__GBC.csv")
+        except:  # prevents the termination of the grid search when errors withing copykat occur
+            pass
 
         # export everything to /app/out
         list_all_nametag_items = [p for p in Path.cwd().glob(f"*{name_tag}*")]
