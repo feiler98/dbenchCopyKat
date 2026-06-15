@@ -5,6 +5,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 import pandas as pd
 import rpy2.robjects as robjects
+import rpy2
 from pathlib import Path
 import shutil
 from pyomics.utils import benchmark_method
@@ -115,7 +116,7 @@ def run_copykat(path_target: Path,
                      {"chromosome_name": "CHR", "start_position": "START", "end_position": "END"}, axis=1).set_index("CHR")
             df_gbc_export["CHR"] = df_gbc_export["CHR"].map(lambda x: f"chr{x}")
             df_gbc_export.to_csv(Path.cwd() / f"{name_tag}_copykat__GBC.csv")
-        except:  # prevents the termination of the grid search when errors withing copykat occur
+        except rpy2.rinterface_lib.embedded.RRuntimeError:  # prevents the termination of the grid search when errors withing copykat occur
             pass
 
         # export everything to /app/out
