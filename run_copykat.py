@@ -54,7 +54,7 @@ def get_hg_38_file_paths(target_path: Path) -> list:
 
 
 def get_hg_38_desc_paths(target_path: Path) -> dict:
-    return {p.stem: p for p in target_path.rglob("*__hg_38.txt")}
+    return {p.stem: p for p in target_path.rglob("*__hg_38__describe.csv")}
 
 
 def run_copykat(path_target: Path,
@@ -68,8 +68,8 @@ def run_copykat(path_target: Path,
                 cell_pre_label: bool = False):
     list_paths_target_csvs = get_hg_38_file_paths(path_target)
     if cell_pre_label:
-        dict_paths_target_txts = get_hg_38_desc_paths(path_target)
-        list_paths_target_csvs = [p for p in list_paths_target_csvs if p.stem.split("__RCM")[0] in dict_paths_target_txts.keys()]
+        dict_paths_target_desc = get_hg_38_desc_paths(path_target)
+        list_paths_target_csvs = [p for p in list_paths_target_csvs if f"{p.stem.split("__RCM")[0]}__describe" in dict_paths_target_desc.keys()]
     for p in list_paths_target_csvs:
         name_tag = f"{p.stem.replace("__RCM", "")}__{random_sequence(len_seq=8)}__copykat"
         path_out_target = path_out_data / name_tag
@@ -77,10 +77,10 @@ def run_copykat(path_target: Path,
 
         norm_cell_vector = ""
         if cell_pre_label:
-            path_txt = dict_paths_target_txts[p.stem.split("__RCM")[0]]   # normal cells split by \n
-            with open(path_txt, "r") as f:
-                list_norm_cells = list(map(lambda x: x.replace("\n", ""), f.readlines()))
-                norm_cell_vector = robjects.vectors.StrVector(list_norm_cells)
+            path_desc = dict_paths_target_desc[f"{p.stem.split("__RCM")[0]}__describe"]   # normal cells split by \n
+            df_desc = pd.read_csv(path_desc, index_col="cell_id")
+            list_norm_cells = list(df_desc.where(df_desc["cell_category"]=="Normal").dropna().index)
+            norm_cell_vector = robjects.vectors.StrVector(list_norm_cells)
 
         ################################################################################################################
         # run copykat R-script
