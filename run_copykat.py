@@ -77,7 +77,7 @@ def run_copykat(path_target: Path,
 
         norm_cell_vector = ""
         if cell_pre_label:
-            path_desc = dict_paths_target_desc[f"{p.stem.split("__RCM")[0]}__describe"]   # normal cells split by \n
+            path_desc = dict_paths_target_desc[f"{p.stem.split("__RCM")[0]}__describe"]
             df_desc = pd.read_csv(path_desc, index_col="cell_id")
             list_norm_cells = list(df_desc.where(df_desc["cell_category"]=="Normal").dropna().index)
             norm_cell_vector = robjects.vectors.StrVector(list_norm_cells)
