@@ -134,7 +134,7 @@ if __name__ == "__main__":
         "low_dr": [0, 0.05, 0.1, 0.25],
         "up_dr": [0, 0.1, 0.25],
         "ks_cut": [0.05, 0.1, 0.3],
-        "cell_pre_label": [False]
+        "cell_pre_label": [True, False]
     }
 
     path_in, path_out = val_build_project()
