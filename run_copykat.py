@@ -5,7 +5,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 import pandas as pd
 import rpy2.robjects as robjects
-import rpy2
 from pathlib import Path
 import shutil
 from pyomics.utils import benchmark_method
